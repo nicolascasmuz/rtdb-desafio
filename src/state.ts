@@ -15,11 +15,11 @@ const state = {
     roomId: "",
     existingRoom: "",
     rtdbRoomId: "",
+    prueba: "",
     messages: [],
   },
   listeners: [],
   init() {
-    /* const localStorageState = localStorage.getItem("state"); */
     const localData: any = localStorage.getItem("saved-state");
     if (!localData) {
       return;
@@ -40,33 +40,6 @@ const state = {
   subscribe(callback: (any) => any) {
     this.listeners.push(callback);
   },
-  /* signIn(callback) {
-    const currentState = this.getState();
-
-    if (currentState.email) {
-      fetch(API_BASE_URL + "/signup", {
-        method: "post",
-        headers: {
-          "content-type": "application/json",
-        },
-        body: JSON.stringify({
-          email: currentState.email,
-          nombre: currentState.fullname,
-        }),
-      })
-        .then((res) => {
-          return res.json();
-        })
-        .then((data) => {
-          currentState.userId = data.id;
-          this.setState(currentState);
-        });
-      callback();
-    } else {
-      console.error("error");
-      callback();
-    }
-  }, */
   getRoom(roomId) {
     const currentState = this.getState();
     currentState.roomId = roomId;
@@ -82,6 +55,16 @@ const state = {
       } else {
         currentState.existingRoom = false;
       }
+      this.setState(currentState);
+    });
+  },
+  getMessages(roomId) {
+    const currentState = this.getState();
+
+    fetch(API_BASE_URL + "/rooms/messages/" + roomId, {
+      method: "get",
+    }).then((messages) => {
+      currentState.prueba = messages;
       this.setState(currentState);
     });
   },
@@ -135,51 +118,6 @@ const state = {
         userFullname: EmailFullname.fullname,
       }),
     });
-  },
-  askNewRoom(callback?) {
-    const currentState = this.getState();
-
-    if (currentState.userId) {
-      fetch(API_BASE_URL + "/rooms", {
-        method: "post",
-        headers: {
-          "content-type": "application/json",
-        },
-        body: JSON.stringify({
-          userId: currentState.userId,
-        }),
-      })
-        .then((res) => {
-          return res.json();
-        })
-        .then((data) => {
-          currentState.roomId = data.id;
-          this.setState(currentState);
-          if (callback) {
-            callback();
-          }
-        });
-    } else {
-      console.error("No hay user id");
-      callback();
-    }
-  },
-  accessToRoom(callback?) {
-    const currentState = this.getState();
-    const roomId = currentState.roomId;
-
-    fetch(API_BASE_URL + "/rooms/" + roomId + "?userId=" + currentState.userId)
-      .then((res) => {
-        return res.json();
-      })
-      .then((data) => {
-        currentState.rtdbRoomId = data.rtdbRoomId;
-        this.setState(currentState);
-        this.listenRoom();
-        if (callback) {
-          callback();
-        }
-      });
   },
   pushMessage(message: string) {
     const currentState = this.getState();
