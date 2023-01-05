@@ -58,7 +58,7 @@ const state = {
       this.setState(currentState);
     });
   },
-  getMessages(roomId) {
+  /* getMessages(roomId) {
     const currentState = this.getState();
 
     fetch(API_BASE_URL + "/rooms/messages/" + roomId, {
@@ -67,17 +67,17 @@ const state = {
       currentState.prueba = messages;
       this.setState(currentState);
     });
-  },
+  }, */
   listenRoom() {
     const currentState = this.getState();
-    const chatroomsRef = rtdb.ref("/rooms/" + currentState.rtdbRoomId);
+    const chatroomsRef = rtdb.ref("/rooms/" + currentState.roomId);
 
     chatroomsRef.on("value", (snapshot) => {
-      const cs = this.getState();
+      const currentState = this.getState();
       const messagesFromServer = snapshot.val();
       const messagesList = map(messagesFromServer.messages);
-      cs.messages = messagesList;
-      this.setState(cs);
+      currentState.messages = messagesList;
+      this.setState(currentState);
     });
   },
   setNewRoom(longRoomId, shortRoomId) {

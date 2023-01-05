@@ -58,7 +58,6 @@ customElements.define(
           state.setNewRoom(longRoomId, shortRoomId);
         } else if (selectEl == "room-existente") {
           state.getRoom(inputRoomidEl);
-          state.getMessages(inputRoomidEl);
         }
 
         // COLOREA EL BORDE DE ROJO Y RUTEA LA PÁGINA
