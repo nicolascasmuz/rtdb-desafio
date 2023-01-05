@@ -4,7 +4,7 @@ customElements.define(
   "chatroom-page",
   class extends HTMLElement {
     shadow: ShadowRoot;
-    buttonText: string;
+    roomidText: string;
     userName: string = "";
     messages: string[] = [];
     constructor() {
@@ -16,8 +16,9 @@ customElements.define(
     addListeners() {
       state.subscribe(() => {
         const currentState = state.getState();
-        this.messages = currentState.message;
-        this.userName = currentState.userName;
+        this.roomidText = currentState.roomId;
+        this.userName = currentState.fullname;
+        this.messages = currentState.messages;
         this.render();
       });
     }
@@ -25,33 +26,40 @@ customElements.define(
       const formEl = this.shadow.querySelector(
         ".chatroom-form__form"
       ) as HTMLElement;
+
       formEl.addEventListener("submit", (e: any) => {
         e.preventDefault();
         const message = e.target["new-message"].value;
-        state.pushMessage(message);
+        if (message == "") {
+          null;
+        } else {
+          state.pushMessage(message);
+        }
       });
     }
     render() {
-      this.buttonText = this.getAttribute("button-text") || "Enviar";
-
       const div = document.createElement("div");
       div.innerHTML = `
         <header class="red-header"></header>
-        <div class="chatroom-div">
-          <section class="chat-box__section">
-              ${this.messages
-                .map((m) => {
-                  return `
-                  <div class="user1__message-box">
-                    <p class="user1__message-text"><span class="user1__message-span">${this.userName}</span>${m}</p>
-                  </div>`;
-                })
-                .join("")}
-          </section>
-          <form class="chatroom-form__form">
-            <input class="chatroom-form__input" type="text" name="new-message">
-            <button class="chatroom-form__button">${this.buttonText}</button>
-          </form>
+        <div class="chatroom-container">
+          <h1 class="chatroom-title">Chat</h1>
+          <h2 class="chatroom-roomid">Room id: ${this.roomidText}</h1>
+          <div class="chatroom-div">
+            <section class="chat-box__section">
+                ${this.messages
+                  .map((m) => {
+                    return `
+                    <div class="user1__message-box">
+                      <p class="user1__message-text"><span class="user1__message-span">${this.userName}</span>${m}</p>
+                    </div>`;
+                  })
+                  .join("")}
+            </section>
+            <form class="chatroom-form__form">
+              <input class="chatroom-form__input" type="text" name="new-message">
+              <button class="chatroom-form__button">Enviar</button>
+            </form>
+          </div>
         </div>
         `;
 
@@ -60,7 +68,23 @@ customElements.define(
             .red-header {
               background-color: #FF8282;
               height: 60px;
-              margin-bottom: 50px;
+            }
+            .chatroom-container {
+            display: grid;
+            justify-content: center;
+            margin: 25px 0;
+            }
+            .chatroom-title {
+            font-family: 'Roboto', cursive;
+            font-size: 52px;
+            font-weight: 700;
+            margin: 0;
+            }
+            .chatroom-roomid {
+            font-family: 'Roboto', cursive;
+            font-size: 28px;
+            font-weight: 500;
+            margin: 0 0 25px 0;
             }
             .chatroom-div {
               display: flex;
@@ -71,12 +95,14 @@ customElements.define(
             .chat-box__section {
               display: flex;
               flex-direction: column;
+              justify-content: flex-end;
+              justify-items: flex-end;
               gap: 6px;
               font-family: 'Roboto';
               width: 312px;
               min-height: 312px;
               max-height: 312px;
-              border: solid 2px #000000;
+              border: solid 4px #9CBBE9;
               border-radius: 4px;
               overflow: auto;
               padding: 10px 6px 10px 6px;
@@ -128,7 +154,7 @@ customElements.define(
             .chatroom-form__input {
               min-width: 312px;
               min-height: 55px;
-              border: solid 2px #000000
+              border: solid 2px #8c8c8c;
               border-radius: 4px;
               font-family: 'Roboto';
               font-size: 25px;
