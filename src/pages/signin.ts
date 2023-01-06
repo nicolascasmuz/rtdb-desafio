@@ -283,6 +283,5 @@ customElements.define(
       this.shadow.appendChild(section);
       this.shadow.appendChild(style);
     }
-    showRoomIdInput() {}
   }
 );

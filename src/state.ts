@@ -34,7 +34,14 @@ const state = {
     for (const cb of this.listeners) {
       cb();
     }
-    localStorage.setItem("saved-state", JSON.stringify(newState));
+    const newData = {
+      email: newState.email,
+      fullname: newState.fullname,
+      userId: newState.userId,
+      roomId: newState.roomId,
+      rtdbRoomId: newState.rtdbRoomId,
+    };
+    localStorage.setItem("saved-state", JSON.stringify(newData));
     console.log("Soy el state, he cambiado: ", this.data);
   },
   subscribe(callback: (any) => any) {
@@ -49,6 +56,7 @@ const state = {
     fetch(API_BASE_URL + "/rooms/" + roomId, {
       method: "get",
     }).then((r) => {
+      currentState.prueba = r;
       const contentLength = Number(r.headers.get("content-length"));
       if (contentLength != 0) {
         currentState.existingRoom = true;
@@ -58,16 +66,6 @@ const state = {
       this.setState(currentState);
     });
   },
-  /* getMessages(roomId) {
-    const currentState = this.getState();
-
-    fetch(API_BASE_URL + "/rooms/messages/" + roomId, {
-      method: "get",
-    }).then((messages) => {
-      currentState.prueba = messages;
-      this.setState(currentState);
-    });
-  }, */
   listenRoom() {
     const currentState = this.getState();
     const chatroomsRef = rtdb.ref("/rooms/" + currentState.roomId);
@@ -123,8 +121,6 @@ const state = {
     const currentState = this.getState();
     const roomId = currentState.roomId;
     const ownerName = currentState.fullname;
-
-    currentState.messages.push(message);
 
     fetch(API_BASE_URL + "/messages", {
       method: "post",
