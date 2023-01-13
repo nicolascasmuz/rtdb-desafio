@@ -3,16 +3,9 @@ import { state } from "../state";
 customElements.define(
   "chatroom-page",
   class extends HTMLElement {
-    shadow: ShadowRoot;
     roomidText: string;
     userName: string = "";
     messages: string[] = [];
-    constructor() {
-      super();
-      this.shadow = this.attachShadow({ mode: "open" });
-      this.addListeners();
-      this.render();
-    }
     addListeners() {
       state.subscribe(() => {
         const currentState = state.getState();
@@ -23,7 +16,10 @@ customElements.define(
       });
     }
     connectedCallback() {
-      const formEl = this.shadow.querySelector(
+      this.addListeners();
+      this.render();
+
+      const formEl = document.querySelector(
         ".chatroom-form__form"
       ) as HTMLElement;
 
@@ -38,8 +34,7 @@ customElements.define(
       });
     }
     render() {
-      const div = document.createElement("div");
-      div.innerHTML = `
+      this.innerHTML = `
         <header class="red-header"></header>
         <div class="chatroom-container">
           <h1 class="chatroom-title">Chat</h1>
@@ -171,8 +166,7 @@ customElements.define(
             }
               `;
 
-      this.shadow.appendChild(div);
-      this.shadow.appendChild(style);
+      this.appendChild(style);
     }
   }
 );

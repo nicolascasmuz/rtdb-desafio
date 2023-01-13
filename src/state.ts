@@ -18,7 +18,13 @@ const state = {
     messages: [],
   },
   listeners: [],
-  init() {},
+  init() {
+    const localData: any = localStorage.getItem("saved-state");
+    if (!localData) {
+      return;
+    }
+    this.setState(JSON.parse(localData));
+  },
   getState() {
     return this.data;
   },
