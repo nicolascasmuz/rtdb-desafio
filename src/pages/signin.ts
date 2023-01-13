@@ -5,20 +5,15 @@ import { nanoid } from "nanoid";
 customElements.define(
   "signin-page",
   class extends HTMLElement {
-    shadow: ShadowRoot;
     labelText: string;
     buttonText: string;
-    constructor() {
-      super();
-      this.shadow = this.attachShadow({ mode: "open" });
-      this.render();
-    }
     connectedCallback() {
+      this.render();
       // DISPLAY DEL ROOM EXISTENTE
-      const selectEl = this.shadow.querySelector(
+      const selectEl = document.querySelector(
         ".signin-form__select-room"
       ) as HTMLSelectElement;
-      const roomExistenteEl = this.shadow.querySelector(
+      const roomExistenteEl = document.querySelector(
         ".signin-form__room-id"
       ) as HTMLElement;
 
@@ -31,7 +26,7 @@ customElements.define(
       });
 
       // LISTENER DEL FORM
-      const formEl = this.shadow.querySelector(
+      const formEl = document.querySelector(
         ".signin-form__form"
       ) as HTMLElement;
       formEl.addEventListener("submit", (e: any) => {
@@ -61,13 +56,13 @@ customElements.define(
         }
 
         // COLOREA EL BORDE DE ROJO Y RUTEA LA PÁGINA
-        const inputEmailEl = this.shadow.querySelector(
+        const inputEmailEl = document.querySelector(
           ".signin-form__input-email"
         ) as HTMLElement;
-        const inputNameEl = this.shadow.querySelector(
+        const inputNameEl = document.querySelector(
           ".signin-form__input-nombre"
         ) as HTMLElement;
-        const existingRoomInput = this.shadow.querySelector(
+        const existingRoomInput = document.querySelector(
           ".signin-form__input-roomid"
         ) as HTMLElement;
 
@@ -134,8 +129,7 @@ customElements.define(
       });
     }
     render() {
-      const section = document.createElement("section");
-      section.innerHTML = `
+      this.innerHTML = `
             <header class="red-header"></header>
             <div class="signin-container">
               <h1 class="signin-title">Bienvenido</h1>
@@ -280,8 +274,7 @@ customElements.define(
             }
             `;
 
-      this.shadow.appendChild(section);
-      this.shadow.appendChild(style);
+      this.appendChild(style);
     }
   }
 );

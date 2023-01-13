@@ -15,17 +15,10 @@ const state = {
     roomId: "",
     existingRoom: "",
     rtdbRoomId: "",
-    prueba: "",
     messages: [],
   },
   listeners: [],
-  init() {
-    const localData: any = localStorage.getItem("saved-state");
-    if (!localData) {
-      return;
-    }
-    this.setState(JSON.parse(localData));
-  },
+  init() {},
   getState() {
     return this.data;
   },
@@ -34,7 +27,6 @@ const state = {
     for (const cb of this.listeners) {
       cb();
     }
-    localStorage.setItem("saved-state", JSON.stringify(newState));
     console.log("Soy el state, he cambiado: ", this.data);
   },
   subscribe(callback: (any) => any) {
